@@ -7,15 +7,12 @@ const middleware = require('../middleware/middleware')
 router.post('/schedule/cuti/add', middleware.protect, middleware.authorize('pbam'), controller.addCuti)
 
 //routes update jadwal cuti
-router.put('/schedule/cuti/edit', middleware.protect, middleware.authorize('pbam'), controller.updateCuti)
+router.put('/schedule/cuti/edit/:id_cuti', middleware.protect, middleware.authorize('pbam'), controller.updateCuti)
 
 //routes add jadwal cuti
-router.put('/schedule/cuti/delete', middleware.protect, middleware.authorize('pbam'), controller.deleteCuti)
+router.put('/schedule/cuti/delete/:id_cuti', middleware.protect, middleware.authorize('pbam'), controller.deleteCuti)
 
 //routes get all jadwal cuti
 router.get('/schedule/cuti/find-all', middleware.protect, middleware.authorize('pbam'), controller.getAllCuti)
-
-//routes get jadwal cuti by id
-router.get('/schedule/cuti/find/:id', middleware.protect, middleware.authorize('pbam'), controller.getCuti)
 
 module.exports = router;

@@ -52,7 +52,8 @@ exports.addCuti = async (req, res) => {
 
 //mengupdate jadwal cuti
 exports.updateCuti = (req, res) => {
-    const {id, tanggal_mulai, tanggal_selesai, keterangan } = req.body;
+    const id = req.params.id_cuti;
+    const {tanggal_mulai, tanggal_selesai, keterangan } = req.body;
     const update = {
         id,
         tanggal_mulai,
@@ -88,14 +89,11 @@ exports.updateCuti = (req, res) => {
         });
 }
 
-
-
-
 //menghapus jadwal cuti
 exports.deleteCuti = (req, res) => {
     Cuti.update({ keterangan: "deleted" }, {
         where: {
-            id: req.body.id
+            id: req.params.id_cuti
         }
     })
     .then(num => {
@@ -118,25 +116,6 @@ exports.deleteCuti = (req, res) => {
 //mendapatkan semua jadwal cuti
 exports.getAllCuti = (req, res) => {
     Cuti.findAll()
-        .then((result) => {
-            res.send({
-                "status": "Success",
-                "data": result
-            })
-        }).catch((err) => {
-            res.status(500).send({
-                message: err.message || "error mengambil data"
-            });
-        });
-}
-
-// mendapatkan jadwal cuti dengan id
-exports.getCuti = (req, res) => {
-    Cuti.findAll({
-        where: {
-            id: req.params.id
-        }
-    })
         .then((result) => {
             res.send({
                 "status": "Success",

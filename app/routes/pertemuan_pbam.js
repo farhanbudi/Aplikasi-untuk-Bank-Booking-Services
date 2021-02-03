@@ -10,6 +10,6 @@ router.post('/meet/add', middleware.protect, middleware.authorize('pbam'), contr
 router.put('/meet/change/:id_pertemuan', middleware.protect, middleware.authorize('pbam'), controller.pcuMeetChange)
 
 //routes pbam membatalkan pertemuan
-router.put('/meet/cancel/:id_pertemuan', middleware.protect, middleware.authorize('pbam'), controller.pcuMeetCancel)
+router.put('/meet/delete/:id_pertemuan', middleware.protect, middleware.authorize('pbam'), controller.pcuMeetCancel)
 
 module.exports = router;

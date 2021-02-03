@@ -13,7 +13,7 @@ router.put('/meet/change/:id_pertemuan', middleware.protect, middleware.authoriz
 router.put('/meet/cancel/:id_pertemuan', middleware.protect, middleware.authorize('pcu'), controller.pcuMeetCancel)
 
 //routes pcu memberi feedback
-router.put('/feedback/add/:id_pertemuan', middleware.protect, middleware.authorize('pcu'), controller.pcuAddFeedback)
+router.put('/feedback/:id_pertemuan', middleware.protect, middleware.authorize('pcu'), controller.pcuAddFeedback)
 
 //get data by id dari tabel jadwal pertemuan + feedback
 router.get('/meet/find/:id_pertemuan', middleware.protect, middleware.authorize('pcu'), controller.meetFindById)
