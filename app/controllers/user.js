@@ -4,110 +4,8 @@ const User = db.users;
 const Holidays = db.jadwal_libur;
 const Op = db.Sequelize.Op;
 
-// get All PCU
-exports.getAllPcu = (req, res) => {
-    User.findAll({
-        where: {
-            role: "pcu"
-        }
-    })
-        .then((result) => {
-            res.send(result);
-        }).catch((err) => {
-            res.status(500).send({
-                message: err.message || "error mengambil data"
-            });
-        });
-}
-// Create PCU
-exports.PostPcu = async (req, res) => {
-    const { email, password, nama, alamat, no_hp, role, assisted_by } = req.body
-    // const today = new Date().toJSON();
-    const hashPassword = await bcrypt.hash(password, 10)
-    const post = {
-        email,
-        password: hashPassword,
-        nama,
-        alamat,
-        no_hp,
-        role,
-        status: "enable",
-        assisted_by
-    }
-
-    User.create(post)
-        .then((data) => {
-            res.send(data);
-            console.log('Data berhasil di input!')
-        })
-        .catch((err) => {
-            res.send({
-                message: err.message || "Data gagal di input!"
-            });
-        });
-}
-
-// get all PBA
-exports.getAllPBA = (req, res) => {
-    User.findAll({
-        where: {
-            role: "pba"
-        }
-    })
-        .then((result) => {
-            res.send(result);
-        }).catch((err) => {
-            res.status(500).send({
-                message: err.message || "error mengabil data"
-            });
-        });
-}
-
-// create PBA
-exports.PostPBA = async (req, res) => {
-    const { email, password, nama, alamat, no_hp, role, managed_by } = req.body
-    // const today = new Date().toJSON();
-    const hashPassword = await bcrypt.hash(password, 10)
-    const post = {
-        email,
-        password: hashPassword,
-        nama,
-        alamat,
-        no_hp,
-        role,
-        status: "enable",
-        managed_by
-    }
-
-    User.create(post)
-        .then((data) => {
-            res.send(data);
-            console.log('Data berhasil di input!')
-        })
-        .catch((err) => {
-            res.status(500).send({
-                message: err.message || "Data gagal di input!"
-            });
-        });
-}
-
-// get all PBAM
-exports.getAllPBAM = (req, res) => {
-    User.findAll({
-        where: {
-            role: "pba"
-        }
-    })
-        .then((result) => {
-            res.send(result);
-        }).catch((err) => {
-            res.status(500).send({
-                message: err.message || "error mengabil data"
-            });
-        });
-}
-// create PBAM
-exports.PostPBAM = async (req, res) => {
+// create new user
+exports.CreateNewUser = async (req, res) => {
     const { email, password, nama, alamat, no_hp, role } = req.body
     // const today = new Date().toJSON();
     const hashPassword = await bcrypt.hash(password, 10)
@@ -133,29 +31,50 @@ exports.PostPBAM = async (req, res) => {
         });
 }
 
-// Create BPBA
-exports.PostBPBA = async (req, res) => {
-    const { email, password, nama, alamat, no_hp, role } = req.body
-    // const today = new Date().toJSON();
-    const hashPassword = await bcrypt.hash(password, 10)
-    const post = {
-        email,
-        password: hashPassword,
-        nama,
-        alamat,
-        no_hp,
-        role,
-        status: "enable",
-    }
-
-    User.create(post)
-        .then((data) => {
-            res.send(data);
-            console.log('Data berhasil di input!')
-        })
-        .catch((err) => {
+// get All PCU
+exports.getAllPcu = (req, res) => {
+    User.findAll({
+        where: {
+            role: "pcu"
+        }
+    })
+        .then((result) => {
+            res.send(result);
+        }).catch((err) => {
             res.status(500).send({
-                message: err.message || "Data gagal di input!"
+                message: err.message || "error mengambil data"
+            });
+        });
+}
+
+// get all PBA
+exports.getAllPBA = (req, res) => {
+    User.findAll({
+        where: {
+            role: "pba"
+        }
+    })
+        .then((result) => {
+            res.send(result);
+        }).catch((err) => {
+            res.status(500).send({
+                message: err.message || "error mengabil data"
+            });
+        });
+}
+
+// get all PBAM
+exports.getAllPBAM = (req, res) => {
+    User.findAll({
+        where: {
+            role: "pba"
+        }
+    })
+        .then((result) => {
+            res.send(result);
+        }).catch((err) => {
+            res.status(500).send({
+                message: err.message || "error mengabil data"
             });
         });
 }
@@ -163,22 +82,6 @@ exports.PostBPBA = async (req, res) => {
 // get all Users data
 exports.getAllUser = (req, res) => {
     User.findAll()
-        .then((result) => {
-            res.send({
-                "status": "Success",
-                "data": result
-            })
-        }).catch((err) => {
-            res.send({
-                message: err.message || "error mengambil data"
-            });
-        });
-}
-
-// get Users id
-exports.getUserId = (req, res) => {
-    const id = req.params.id;
-    User.findByPk(id)
         .then((result) => {
             res.send({
                 "status": "Success",
@@ -252,7 +155,7 @@ exports.getEmail = (req, res) => {
 //Update user
 exports.updateUser = (req, res) => {
     //const {nama, alamat, no_hp} = req.body
-    const email = req.body.email;
+    const email = req.params.email;
     User.update({
         nama: req.body.nama,
         alamat: req.body.alamat,
@@ -280,7 +183,7 @@ exports.updateUser = (req, res) => {
 
 //Update status user
 exports.updateStatusUser = (req, res) => {
-    const email = req.body.email;
+    const email = req.params.email;
     User.update({ status: req.body.status }, {
         where: { email: email }
     })
@@ -344,38 +247,43 @@ exports.setPBAMdariPBA = (req, res) => {
 
 //set pcu dari pba
 exports.setPCUdariPBA = async (req, res) => {
-    const id = req.params.id;
-    const { assisted_by } = req.body;
-
-    try {
-        const user = await User.findByPk(id);
-
-        if (user) {
-            await User.update({ assisted_by },
-                {
+    User.findOne(
+        {where: {email: req.body.email_pba, role: "pba" }
+        })
+        .then(function(result){
+            if (result) {
+                //data exist
+                User.update({ assisted_by: req.body.email_pba }, {
                     where: {
-                        id,
+                        email: req.body.email_pcu,
                         role: "pcu",
                         status: { [Op.not]: "disable" }
                     }
-                });
-
-            return res.status(200).json({
-                message: "PBA berhasil di set",
+                })
+                    .then(num => {
+                        if (num == 1) {
+                            res.send({
+                                message: "PBAM berhasil di set"
+                            });
+                        } else {
+                            res.send({
+                                message: `email ${req.body.email_pba} tidak ditemukan atau role bukan pba`
+                            })
+                        }
+                    }).catch((err) => {
+                        res.status(500).send({
+                            message: err.message || "PBAM tidak berhasil di set"
+                        });
+                    })
+            } else {
+                res.send({status: "failed", message:"role dari email email_pbam bukan pbam"})
+            }
+        })
+        .catch((err) => {
+            res.status(500).send({
+                message: err.message || "error mengambil data"
             });
-
-        } else {
-            return res.status(400).json({
-                message: `role bukan pcu`
-            });
-        }
-
-
-    } catch (err) {
-        return res.status(400).json({
-            message: err.message || "PBA tidak berhasil di set"
         });
-    }
 }
 
 // get semua tanggal libur
@@ -421,7 +329,8 @@ exports.postHoliday = async (req, res) => {
 
 //BPBA mengupdate jadwal libur
 exports.updateHolidays = (req, res) => {
-    const { id, tanggal_mulai, tanggal_selesai, keterangan } = req.body;
+    const id = req.params.id;
+    const {tanggal_mulai, tanggal_selesai, keterangan } = req.body;
     const update = {
         id,
         tanggal_mulai,
@@ -437,7 +346,7 @@ exports.updateHolidays = (req, res) => {
     };
 
     Holidays.update(update, {
-        where: { id: req.body.id }
+        where: { id: req.params.id }
     })
         .then(num => {
             if (num == 1) {
@@ -461,7 +370,7 @@ exports.updateHolidays = (req, res) => {
 exports.deleteHolidays = (req, res) => {
     Holidays.update({ keterangan: "deleted" }, {
         where: {
-            id: req.body.id
+            id: req.params.id
         }
     })
         .then(num => {
@@ -483,7 +392,7 @@ exports.deleteHolidays = (req, res) => {
 }
 
 //PBAM melihat data PBA
-exports.getAllpba = (req, res) => {
+/*exports.getAllpba = (req, res) => {
     User.findAll({
         where: {
             role: "pba"
@@ -499,10 +408,10 @@ exports.getAllpba = (req, res) => {
                 message: err.message || "error mengambil data"
             });
         });
-}
+}*/
 
 //PBAM edit assisted_by PBA
-exports.updateAssisted = (req, res) => {
+/*exports.updateAssisted = (req, res) => {
     const email = req.body.email;
     User.update({ assisted_by: req.body.assisted_by }, {
         where: {[ Op.and]: [
@@ -525,4 +434,4 @@ exports.updateAssisted = (req, res) => {
                 message: err.message || "Data gagal di update"
             });
         })
-}
+}*/

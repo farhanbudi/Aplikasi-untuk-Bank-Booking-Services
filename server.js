@@ -29,9 +29,6 @@ app.use('/bpba', require('./app/routes/tempat'));
 app.use('/pbam', require('./app/routes/cuti'));
 app.use('/pbam', require('./app/routes/pertemuan_pbam'));
 app.use('/pbam', require('./app/routes/report'));
-app.use('/pbam', require('./app/routes/user'));
-app.use('/pbam', require('./app/routes/tempat2pba'));
-app.use('/pbam', require('./app/routes/user_pba'));
 // Routes pcu
 app.use('/pcu', require('./app/routes/pertemuan_pcu'));
 // Routes pba
