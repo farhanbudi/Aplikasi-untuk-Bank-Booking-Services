@@ -8,6 +8,7 @@ In this project, there are log in and log out features. After logging in, a toke
 
 This program created using the Node.js programming language, the ExpressJS framework, Sequelize ORM, and MySQL database. ER diagrams from the database used in this project are:
 
+![](https://github.com/farhanbudi/Aplikasi-untuk-Bank-Booking-Services/blob/main/ER%20Diagrams.png)
 
 ### Features and API for the main page:
 * Users can login dan logout.
