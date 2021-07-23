@@ -65,7 +65,7 @@ This program created using the Node.js programming language, the ExpressJS frame
 
 *	PBAM can add, edit, delete, and view leave schedules for certain PBAs in Jadwal Cuti database table.
  
-    API: POST /pbam/schedule/cuti/add, PUT /pbam/schedule/cuti/edit/:id_cuti, API: PUT /pbam/schedule/cuti/delete/:id_cuti, GET /pbam/schedule/cuti/find-all.
+    API: POST /pbam/schedule/cuti/add, PUT /pbam/schedule/cuti/edit/:id_cuti, PUT /pbam/schedule/cuti/delete/:id_cuti, GET /pbam/schedule/cuti/find-all.
 
 *	PBAM can view daily reports and rank order according to the meeting rating for each PBA. 
 
