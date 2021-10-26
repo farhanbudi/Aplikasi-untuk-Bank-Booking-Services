@@ -83,4 +83,4 @@ This program created using the Node.js programming language, the ExpressJS frame
     - GET /pbam/report/:tanggal/:id_pba
     - GET /report/rank/:tanggal.
 
-Portfolio for this project in pdf can be accessed [here](https://github.com/farhanbudi/Aplikasi-untuk-Bank-Booking-Services/blob/main/file/Portofolio%20Farhan%20Nurizky.pdf)
+Portfolio for this project in pdf can be accessed [here](https://drive.google.com/drive/folders/1y2Rm4dt-PzRTxMIVbOPuEZlKW6ASShb5?usp=sharing)
