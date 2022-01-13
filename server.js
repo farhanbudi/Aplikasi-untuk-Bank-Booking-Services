@@ -1,11 +1,11 @@
-require('dotenv').config()
-const express = require('express');
-const bodyParser = require('body-parser');
-const morgan = require('morgan')
-const cors = require('cors')
+require("dotenv").config();
+const express = require("express");
+const bodyParser = require("body-parser");
+const morgan = require("morgan");
+const cors = require("cors");
 
 // Database
-const db = require('./app/models');
+const db = require("./app/models");
 
 // Sync database
 db.sequelize.sync();
@@ -15,27 +15,28 @@ const app = express();
 // cors
 app.use(cors());
 
-app.use(morgan('dev'));
+app.use(morgan("dev"));
 // Body Parser
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 // Routes Login/Logout
-app.use('/auth', require('./app/routes/auth'));
+app.use("/auth", require("./app/routes/auth"));
 // Routes Bpba
-app.use('/bpba', require('./app/routes/user'));
-app.use('/bpba', require('./app/routes/tempat'));
+app.use("/bpba", require("./app/routes/user"));
+app.use("/bpba", require("./app/routes/libur"));
+app.use("/bpba", require("./app/routes/tempat"));
 // Routes pbam
-app.use('/pbam', require('./app/routes/cuti'));
-app.use('/pbam', require('./app/routes/pertemuan_pbam'));
-app.use('/pbam', require('./app/routes/report'));
+app.use("/pbam", require("./app/routes/cuti"));
+app.use("/pbam", require("./app/routes/pertemuan_pbam"));
+app.use("/pbam", require("./app/routes/report"));
 // Routes pcu
-app.use('/pcu', require('./app/routes/pertemuan_pcu'));
+app.use("/pcu", require("./app/routes/pertemuan_pcu"));
 // Routes pba
-app.use('/pba', require('./app/routes/pertemuan_pba'));
+app.use("/pba", require("./app/routes/pertemuan_pba"));
 
 const PORT = process.env.PORT;
 
 app.listen(PORT, console.log(`Server started on port ${PORT}`));
 
-module.exports = app
+module.exports = app;
