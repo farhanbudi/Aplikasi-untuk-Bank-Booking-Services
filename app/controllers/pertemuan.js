@@ -237,35 +237,27 @@ exports.pcuMeetChange = (req, res) => {
       var idPba = result.id_pba;
       Libur.findOne({
         where: {
-          [Op.or]: [
-            { keterangan: "deleted" },
-            {
-              [Op.and]: [
-                { tanggal_mulai: { [Op.lte]: req.body.tanggal } },
-                { tanggal_selesai: { [Op.gte]: req.body.tanggal } },
-              ],
-            },
+          [Op.and]: [
+            { tanggal_mulai: { [Op.lte]: req.body.tanggal } },
+            { tanggal_selesai: { [Op.gte]: req.body.tanggal } },
           ],
+          [Op.not]: { keterangan: "deleted" },
         },
       })
         .then(function (result) {
           if (result) {
             //data exist
-            res.send({ status: "failed", message: "bank sedang libur" });
+            res.send({ status: result, message: datenow });
           } else {
             // data not exist
             Cuti.findOne({
               where: {
-                [Op.or]: [
-                  { keterangan: "deleted" },
-                  {
-                    [Op.and]: [
-                      { id_pba: idPba },
-                      { tanggal_mulai: { [Op.lte]: req.body.tanggal } },
-                      { tanggal_selesai: { [Op.gte]: req.body.tanggal } },
-                    ],
-                  },
+                [Op.and]: [
+                  { id_pba: idPba },
+                  { tanggal_mulai: { [Op.lte]: req.body.tanggal } },
+                  { tanggal_selesai: { [Op.gte]: req.body.tanggal } },
                 ],
+                [Op.not]: { keterangan: "deleted" },
               },
             })
               .then(function (result) {
@@ -276,35 +268,31 @@ exports.pcuMeetChange = (req, res) => {
                   // data not exist
                   Meet.findOne({
                     where: {
-                      [Op.or]: [
-                        { status: "canceled" },
+                      [Op.and]: [
+                        { id_pba: idPba },
+                        { tanggal: req.body.tanggal },
                         {
-                          [Op.and]: [
-                            { id_pba: idPba },
-                            { tanggal: req.body.tanggal },
+                          [Op.or]: [
                             {
-                              [Op.or]: [
-                                {
-                                  jam_mulai: {
-                                    [Op.between]: [
-                                      req.body.jam_mulai,
-                                      req.body.jam_selesai,
-                                    ],
-                                  },
-                                },
-                                {
-                                  jam_selesai: {
-                                    [Op.between]: [
-                                      req.body.jam_mulai,
-                                      req.body.jam_selesai,
-                                    ],
-                                  },
-                                },
-                              ],
+                              jam_mulai: {
+                                [Op.between]: [
+                                  req.body.jam_mulai,
+                                  req.body.jam_selesai,
+                                ],
+                              },
+                            },
+                            {
+                              jam_selesai: {
+                                [Op.between]: [
+                                  req.body.jam_mulai,
+                                  req.body.jam_selesai,
+                                ],
+                              },
                             },
                           ],
                         },
                       ],
+                      [Op.not]: { status: "canceled" },
                     },
                   })
                     .then(function (result) {
