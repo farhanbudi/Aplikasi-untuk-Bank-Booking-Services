@@ -1,4 +1,5 @@
 const db = require("../models");
+const sequelize = require("sequelize");
 const Meet = db.pertemuan;
 const Tempat = db.tempat;
 const Tempat2Pba = db.tempat2pba;
@@ -110,9 +111,19 @@ exports.addMeet = async (req, res) => {
 
                                 // FUNCTION CREATE NEW DATA
                                 Meet.create(post)
-                                  .then((data) => {
-                                    res.send(data);
-                                    console.log("Data berhasil di input!");
+                                  .then((result) => {
+                                    res.send({
+                                      message: "Data berhasil di input!",
+                                      data: {
+                                        id_pcu: result.id_pcu,
+                                        id_pba: result.id_pba,
+                                        topik: result.topik,
+                                        tanggal: result.tanggal,
+                                        jam_mulai: result.jam_mulai,
+                                        jam_selesai: result.jam_selesai,
+                                        tempat_id: result.tempat_id,
+                                      },
+                                    });
                                   })
                                   .catch((err) => {
                                     res.status(500).send({
@@ -207,6 +218,7 @@ exports.pbaRejected = (req, res) => {
       if (num == 1) {
         res.send({
           message: "Pesanan ditolak",
+          alasan: req.body.rejected_feedback,
         });
       } else {
         res.send({
@@ -411,6 +423,8 @@ exports.pcuMeetChange = (req, res) => {
   } else {
     res.send({
       message: "tanggal sudah melebihi h-1",
+      datemow: datenow,
+      tanggal: tanggal,
     });
   }
 };
@@ -459,6 +473,10 @@ exports.pcuAddFeedback = (req, res) => {
       if (num == 1) {
         res.send({
           message: "Feedback berhasil diinput",
+          data: {
+            rating: req.body.rating_pcu,
+            feedback: req.body.feedback_pcu,
+          },
         });
       } else {
         res.send({
@@ -490,6 +508,10 @@ exports.pbaAddFeedback = (req, res) => {
       if (num == 1) {
         res.send({
           message: "Feedback berhasil diinput",
+          data: {
+            rating: req.body.rating_pba,
+            feedback: req.body.feedback_pba,
+          },
         });
       } else {
         res.send({
@@ -508,12 +530,40 @@ exports.pbaAddFeedback = (req, res) => {
 exports.meetFindById = (req, res) => {
   Meet.findAll({
     include: [
-      { model: User, attributes: ["id", "email", "nama", "role"] },
-      { model: Tempat, attributes: ["id", "nama_tempat"] },
+      {
+        model: User,
+        require: true,
+        as: "user_pcu",
+        attributes: ["id", "email", "nama"],
+      },
+      {
+        model: User,
+        require: true,
+        as: "user_pba",
+        attributes: ["id", "email", "nama"],
+      },
+      {
+        model: Tempat,
+        attributes: ["id", "nama_tempat"],
+      },
     ],
     where: {
       id: req.params.id_pertemuan,
     },
+    attributes: [
+      "id",
+      "id_pcu",
+      "id_pba",
+      "topik",
+      "tanggal",
+      "jam_mulai",
+      "jam_selesai",
+      "status",
+      "rating_pcu",
+      "feedback_pcu",
+      "rating_pba",
+      "feedback_pba",
+    ],
   })
     .then((result) => {
       res.send({
@@ -532,12 +582,40 @@ exports.meetFindById = (req, res) => {
 exports.meetFindByPcu = (req, res) => {
   Meet.findAll({
     include: [
-      { model: User, attributes: ["id", "email", "nama", "role"] },
-      { model: Tempat, attributes: ["id", "nama_tempat"] },
+      {
+        model: User,
+        require: true,
+        as: "user_pcu",
+        attributes: ["id", "email", "nama"],
+      },
+      {
+        model: User,
+        require: true,
+        as: "user_pba",
+        attributes: ["id", "email", "nama"],
+      },
+      {
+        model: Tempat,
+        attributes: ["id", "nama_tempat"],
+      },
     ],
     where: {
       id_pcu: req.params.id_pcu,
     },
+    attributes: [
+      "id",
+      "id_pcu",
+      "id_pba",
+      "topik",
+      "tanggal",
+      "jam_mulai",
+      "jam_selesai",
+      "status",
+      "rating_pcu",
+      "feedback_pcu",
+      "rating_pba",
+      "feedback_pba",
+    ],
   })
     .then((result) => {
       res.send({
@@ -556,12 +634,40 @@ exports.meetFindByPcu = (req, res) => {
 exports.meetFindByPba = (req, res) => {
   Meet.findAll({
     include: [
-      { model: User, attributes: ["id", "email", "nama", "role"] },
-      { model: Tempat, attributes: ["id", "nama_tempat"] },
+      {
+        model: User,
+        require: true,
+        as: "user_pcu",
+        attributes: ["id", "email", "nama"],
+      },
+      {
+        model: User,
+        require: true,
+        as: "user_pba",
+        attributes: ["id", "email", "nama"],
+      },
+      {
+        model: Tempat,
+        attributes: ["id", "nama_tempat"],
+      },
     ],
     where: {
       id_pba: req.params.id_pba,
     },
+    attributes: [
+      "id",
+      "id_pcu",
+      "id_pba",
+      "topik",
+      "tanggal",
+      "jam_mulai",
+      "jam_selesai",
+      "status",
+      "rating_pcu",
+      "feedback_pcu",
+      "rating_pba",
+      "feedback_pba",
+    ],
   })
     .then((result) => {
       res.send({
@@ -580,34 +686,37 @@ exports.meetFindByPba = (req, res) => {
 exports.meetFindAll = (req, res) => {
   Meet.findAll({
     include: [
-      { model: User, attributes: ["id", "email", "nama", "role"] },
-      { model: Tempat, attributes: ["id", "nama_tempat"] },
+      {
+        model: User,
+        require: true,
+        as: "user_pcu",
+        attributes: ["id", "email", "nama"],
+      },
+      {
+        model: User,
+        require: true,
+        as: "user_pba",
+        attributes: ["id", "email", "nama"],
+      },
+      {
+        model: Tempat,
+        attributes: ["id", "nama_tempat"],
+      },
     ],
-  })
-    .then((result) => {
-      res.send({
-        status: "Success",
-        data: result,
-      });
-    })
-    .catch((err) => {
-      res.status(500).send({
-        message: err.message || "error mengambil data",
-      });
-    });
-};
-
-// DELETED
-//get tempat yang dapat dipilih oleh pba tertentu
-exports.getTempat2Pba = (req, res) => {
-  Tempat2Pba.findAll({
-    include: [
-      { model: User, attributes: ["id", "email", "nama", "role"] },
-      { model: Tempat, attributes: ["id", "nama_tempat"] },
+    attributes: [
+      "id",
+      "id_pcu",
+      "id_pba",
+      "topik",
+      "tanggal",
+      "jam_mulai",
+      "jam_selesai",
+      "status",
+      "rating_pcu",
+      "feedback_pcu",
+      "rating_pba",
+      "feedback_pba",
     ],
-    where: {
-      id_pba: req.params.id_pba,
-    },
   })
     .then((result) => {
       res.send({
@@ -626,12 +735,40 @@ exports.getTempat2Pba = (req, res) => {
 exports.pbaReportDaily = (req, res) => {
   Meet.findAll({
     include: [
-      { model: User, attributes: ["id", "email", "nama", "role"] },
-      { model: Tempat, attributes: ["id", "nama_tempat"] },
+      {
+        model: User,
+        require: true,
+        as: "user_pcu",
+        attributes: ["id", "email", "nama"],
+      },
+      {
+        model: User,
+        require: true,
+        as: "user_pba",
+        attributes: ["id", "email", "nama"],
+      },
+      {
+        model: Tempat,
+        attributes: ["id", "nama_tempat"],
+      },
     ],
     where: {
       tanggal: req.params.tanggal,
     },
+    attributes: [
+      "id",
+      "id_pcu",
+      "id_pba",
+      "topik",
+      "tanggal",
+      "jam_mulai",
+      "jam_selesai",
+      "status",
+      "rating_pcu",
+      "feedback_pcu",
+      "rating_pba",
+      "feedback_pba",
+    ],
   })
     .then((result) => {
       res.send({
@@ -650,13 +787,41 @@ exports.pbaReportDaily = (req, res) => {
 exports.pbaReportDailyById = (req, res) => {
   Meet.findAll({
     include: [
-      { model: User, attributes: ["id", "email", "nama", "role"] },
-      { model: Tempat, attributes: ["id", "nama_tempat"] },
+      {
+        model: User,
+        require: true,
+        as: "user_pcu",
+        attributes: ["id", "email", "nama"],
+      },
+      {
+        model: User,
+        require: true,
+        as: "user_pba",
+        attributes: ["id", "email", "nama"],
+      },
+      {
+        model: Tempat,
+        attributes: ["id", "nama_tempat"],
+      },
     ],
     where: {
       tanggal: req.params.tanggal,
       id_pba: req.params.id_pba,
     },
+    attributes: [
+      "id",
+      "id_pcu",
+      "id_pba",
+      "topik",
+      "tanggal",
+      "jam_mulai",
+      "jam_selesai",
+      "status",
+      "rating_pcu",
+      "feedback_pcu",
+      "rating_pba",
+      "feedback_pba",
+    ],
   })
     .then((result) => {
       res.send({
@@ -674,14 +839,23 @@ exports.pbaReportDailyById = (req, res) => {
 // Rangking PBA perhari
 exports.reportRankPBA = (req, res) => {
   Meet.findAll({
-    attributes: [[sequelize.fn("sum", sequelize.col("rating_pcu")), "total"]],
-    include: [{ model: User }],
+    attributes: [
+      [sequelize.fn("avg", sequelize.col("rating_pcu")), "average_rating"],
+    ],
+    include: [
+      {
+        model: User,
+        require: true,
+        as: "user_pba",
+        attributes: ["id", "email", "nama"],
+      },
+    ],
     where: {
       tanggal: req.params.tanggal,
     },
-    group: ["User.id"],
+    group: ["user_pba.id"],
     raw: true,
-    order: sequelize.literal("total DESC"),
+    order: sequelize.literal("average_rating DESC"),
   })
     .then((result) => {
       res.send(result);
@@ -693,23 +867,35 @@ exports.reportRankPBA = (req, res) => {
     });
 };
 
-//find jadwal apakah available atau tidak
-/*exports.pertemuanAvailable = (req, res) => {
-    Meet.findOne(
-        {where: { [Op.and]: [
-            {tanggal: req.params.tanggal},
-            {[Op.or]: [
-                {jam_mulai: {[Op.between]: [req.params.jam_mulai, req.params.jam_selesai]}},
-                {jam_selesai: {[Op.between]: [req.params.jam_mulai, req.params.jam_selesai]}}
-            ]}
-        ]}
-        })
-        .then((result) => {
-            res.send(result);
-        })
-        .catch((err) => {
-            res.status(500).send({
-                message: err.message || "error mengambil data"
-            });
-        });
-}*/
+exports.findTanggal = (req, res) => {
+  Meet.findAll({
+    where: {
+      [Op.and]: [
+        { tanggal: { [Op.gte]: req.params.tanggal_mulai } },
+        { tanggal: { [Op.lte]: req.params.tanggal_selesai } },
+      ],
+    },
+    include: [
+      {
+        model: User,
+        require: true,
+        as: "user_pcu",
+        attributes: ["id", "email", "nama"],
+      },
+      {
+        model: User,
+        require: true,
+        as: "user_pba",
+        attributes: ["id", "email", "nama"],
+      },
+    ],
+  })
+    .then((result) => {
+      res.send({ data: result });
+    })
+    .catch((err) => {
+      res.status(500).send({
+        message: err.message || "error mengambil data",
+      });
+    });
+};

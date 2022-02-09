@@ -44,11 +44,11 @@ router.get(
 );
 
 //get semua data dari tabel jadwal pertemuan + feedback
-router.get(
-  "/meet/find-all",
-  middleware.protect,
-  middleware.authorize("pba"),
-  controller.meetFindAll
-);
+// router.get(
+//   "/meet/find-all",
+//   middleware.protect,
+//   middleware.authorize("pba"),
+//   controller.meetFindAll
+// );
 
 module.exports = router;

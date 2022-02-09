@@ -19,9 +19,17 @@ exports.CreateNewUser = async (req, res) => {
   };
 
   User.create(post)
-    .then((data) => {
-      res.send(data);
-      console.log("Data berhasil di input!");
+    .then((result) => {
+      res.send({
+        message: "Data berhasil di input!",
+        data: {
+          nama: result.nama,
+          email: result.email,
+          alamat: result.alamat,
+          no_hp: result.no_hp,
+          role: result.role,
+        },
+      });
     })
     .catch((err) => {
       res.status(500).send({
@@ -30,60 +38,11 @@ exports.CreateNewUser = async (req, res) => {
     });
 };
 
-// get All PCU
-exports.getAllPcu = (req, res) => {
-  User.findAll({
-    where: {
-      role: "pcu",
-    },
-  })
-    .then((result) => {
-      res.send(result);
-    })
-    .catch((err) => {
-      res.status(500).send({
-        message: err.message || "error mengambil data",
-      });
-    });
-};
-
-// get all PBA
-exports.getAllPBA = (req, res) => {
-  User.findAll({
-    where: {
-      role: "pba",
-    },
-  })
-    .then((result) => {
-      res.send(result);
-    })
-    .catch((err) => {
-      res.status(500).send({
-        message: err.message || "error mengabil data",
-      });
-    });
-};
-
-// get all PBAM
-exports.getAllPBAM = (req, res) => {
-  User.findAll({
-    where: {
-      role: "pba",
-    },
-  })
-    .then((result) => {
-      res.send(result);
-    })
-    .catch((err) => {
-      res.status(500).send({
-        message: err.message || "error mengabil data",
-      });
-    });
-};
-
 // get all Users data
 exports.getAllUser = (req, res) => {
-  User.findAll()
+  User.findAll({
+    attributes: ["id", "nama", "email", "alamat", "no_hp", "role"],
+  })
     .then((result) => {
       res.send({
         status: "Success",
@@ -103,6 +62,7 @@ exports.getRole = (req, res) => {
     where: {
       role: req.params.role,
     },
+    attributes: ["id", "nama", "email", "alamat", "no_hp", "role"],
   })
     .then((result) => {
       res.send({
@@ -123,6 +83,7 @@ exports.getName = (req, res) => {
     where: {
       nama: req.params.name,
     },
+    attributes: ["id", "nama", "email", "alamat", "no_hp", "role"],
   })
     .then((result) => {
       res.send({
@@ -143,6 +104,7 @@ exports.getEmail = (req, res) => {
     where: {
       email: req.params.email,
     },
+    attributes: ["id", "nama", "email", "alamat", "no_hp", "role"],
   })
     .then((result) => {
       res.send({
@@ -159,7 +121,6 @@ exports.getEmail = (req, res) => {
 
 //Update user
 exports.updateUser = (req, res) => {
-  //const {nama, alamat, no_hp} = req.body
   const email = req.params.email;
   User.update(
     {
@@ -171,8 +132,8 @@ exports.updateUser = (req, res) => {
       where: { email: email },
     }
   )
-    .then((num) => {
-      if (num == 1) {
+    .then((result) => {
+      if (result == 1) {
         res.send({
           message: "Data berhasil di update",
         });
@@ -190,12 +151,11 @@ exports.updateUser = (req, res) => {
 };
 
 //Update status user
-exports.updateStatusUser = (req, res) => {
-  const email = req.params.email;
+exports.deleteUser = (req, res) => {
   User.update(
-    { status: req.body.status },
+    { status: "disable" },
     {
-      where: { email: email },
+      where: { email: req.params.email },
     }
   )
     .then((num) => {
@@ -307,25 +267,6 @@ exports.setPCUdariPBA = async (req, res) => {
       });
     });
 };
-
-//PBAM melihat data PBA
-/*exports.getAllpba = (req, res) => {
-    User.findAll({
-        where: {
-            role: "pba"
-        }
-    })
-        .then((result) => {
-            res.send({
-                "status": "Success",
-                "data": result
-            })
-        }).catch((err) => {
-            res.status(500).send({
-                message: err.message || "error mengambil data"
-            });
-        });
-}*/
 
 //PBAM edit assisted_by PBA
 /*exports.updateAssisted = (req, res) => {

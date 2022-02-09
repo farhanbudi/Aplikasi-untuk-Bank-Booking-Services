@@ -3,7 +3,9 @@ const Holidays = db.jadwal_libur;
 
 // get semua tanggal libur
 exports.getAllHolidays = (req, res) => {
-  Holidays.findAll()
+  Holidays.findAll({
+    attributes: ["tanggal_mulai", "tanggal_selesai", "keterangan"],
+  })
     .then((result) => {
       res.send(result);
     })
@@ -31,9 +33,15 @@ exports.postHoliday = async (req, res) => {
   }
 
   Holidays.create(post)
-    .then((data) => {
-      res.send(data);
-      console.log("Tanggal berhasil ditambahkan");
+    .then((result) => {
+      res.send({
+        message: "Data berhasil di input!",
+        data: {
+          tanggal_mulai: result.tanggal_mulai,
+          tanggal_selesai: result.tanggal_selesai,
+          keterangan: result.keterangan,
+        },
+      });
     })
     .catch((err) => {
       res.status(500).send({

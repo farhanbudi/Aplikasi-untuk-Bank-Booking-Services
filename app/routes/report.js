@@ -3,6 +3,14 @@ const router = express.Router();
 const controller = require("../controllers/pertemuan");
 const middleware = require("../middleware/middleware");
 
+// routes pbam melihat rangking pba
+router.get(
+  "/report/ranking/:tanggal",
+  middleware.protect,
+  middleware.authorize("pbam"),
+  controller.reportRankPBA
+);
+
 //routes pbam melihat laporan harian
 router.get(
   "/report/:tanggal",
@@ -17,14 +25,6 @@ router.get(
   middleware.protect,
   middleware.authorize("pbam"),
   controller.pbaReportDailyById
-);
-
-// routes pbam melihat rangking pba
-router.get(
-  "/report/rank/:tanggal",
-  middleware.protect,
-  middleware.authorize("pbam"),
-  controller.reportRankPBA
 );
 
 module.exports = router;

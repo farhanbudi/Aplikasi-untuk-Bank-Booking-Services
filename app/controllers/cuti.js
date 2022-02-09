@@ -26,9 +26,16 @@ exports.addCuti = async (req, res) => {
     .then(function (result) {
       if (result) {
         Cuti.create(post)
-          .then((data) => {
-            res.send(data);
-            console.log("Data berhasil di input!");
+          .then((result) => {
+            res.send({
+              message: "Data berhasil di input!",
+              data: {
+                id_pba: result.id_pba,
+                tanggal_mulai: result.tanggal_mulai,
+                tanggal_selesai: result.tanggal_selesai,
+                keterangan: result.keterangan,
+              },
+            });
           })
           .catch((err) => {
             res.status(500).send({
@@ -118,7 +125,16 @@ exports.deleteCuti = (req, res) => {
 
 //mendapatkan semua jadwal cuti
 exports.getAllCuti = (req, res) => {
-  Cuti.findAll()
+  Cuti.findAll({
+    include: [
+      {
+        model: User,
+        require: true,
+        attributes: ["id", "email", "nama", "role"],
+      },
+    ],
+    attributes: ["tanggal_mulai", "tanggal_selesai", "keterangan"],
+  })
     .then((result) => {
       res.send({
         status: "Success",

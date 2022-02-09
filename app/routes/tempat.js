@@ -27,4 +27,7 @@ router.put(
   controller.updateLoc
 );
 
+// route baru
+// router.get("/pertemuan/tempat/:tempat", controller.getPertemuanTempat);
+
 module.exports = router;

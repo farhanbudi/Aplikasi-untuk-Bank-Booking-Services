@@ -52,14 +52,11 @@ router.get(
 );
 
 //get semua data dari tabel jadwal pertemuan + feedback
-router.get(
-  "/meet/find-all",
-  middleware.protect,
-  middleware.authorize("pcu"),
-  controller.meetFindAll
-);
-
-//get tempat yang dapat dipilih oleh pba tertentu
-router.get("/tempat2pba/find/:id_pba", controller.getTempat2Pba);
+// router.get(
+//   "/meet/find-all",
+//   middleware.protect,
+//   middleware.authorize("pcu"),
+//   controller.meetFindAll
+// );
 
 module.exports = router;

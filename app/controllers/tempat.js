@@ -1,16 +1,22 @@
 const db = require("../models");
 const Tempat = db.tempat;
+const Pertemuan = db.pertemuan;
+const User = db.users;
 
 //BPBA menambah list tempat SLP (sentra layana priority(?))
 exports.addLoc = async (req, res) => {
   const post = {
     nama_tempat: req.body.nama_tempat,
   };
-
   Tempat.create(post)
-    .then((data) => {
-      res.send(data);
-      console.log("Data berhasil di input!");
+    .then((result) => {
+      res.send({
+        message: "Data berhasil di input!",
+        data: {
+          id: result.id,
+          nama_tempat: result.nama_tempat,
+        },
+      });
     })
     .catch((err) => {
       res.status(500).send({
@@ -60,3 +66,39 @@ exports.updateLoc = (req, res) => {
       });
     });
 };
+
+// exports.getPertemuanTempat = (req, res) => {
+//   const tempat = req.params.tempat;
+//   Pertemuan.findAll({
+//     include: [
+//       {
+//         model: User,
+//         require: true,
+//         as: "user_pcu",
+//         attributes: ["id", "email", "nama"],
+//       },
+//       {
+//         model: User,
+//         require: true,
+//         as: "user_pba",
+//         attributes: ["id", "email", "nama"],
+//       },
+//       {
+//         model: Tempat,
+//         attributes: ["id", "nama_tempat"],
+//         where: { nama_tempat: tempat },
+//       },
+//     ],
+//   })
+//     .then((result) => {
+//       res.send({
+//         status: "Success",
+//         data: result,
+//       });
+//     })
+//     .catch((err) => {
+//       res.status(500).send({
+//         message: err.message || "error mengambil data",
+//       });
+//     });
+// };

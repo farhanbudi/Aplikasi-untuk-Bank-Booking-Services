@@ -65,10 +65,10 @@ router.put(
 
 //Routes update status user
 router.put(
-  "/admin/status-change/:email",
+  "/admin/delete/:email",
   middleware.protect,
   middleware.authorize("bpba"),
-  controller.updateStatusUser
+  controller.deleteUser
 );
 
 //Routes set pbam dari pba
